@@ -3,15 +3,48 @@
 extern AddressBook adds[LEN+1];
 extern unordered_map<string,UINT> names;
 
+int judgeTelepone(string teleponeNumber) {
 
-void addContacts(UINT *addc,AddressBook oneAdd) {
-	adds[*addc] = oneAdd;
-	names[oneAdd.name] = *addc;
-	(*addc)++;
+}
+void input(AddressBook *oneAddress) {
+	UINT sex;
+	string teleponeNumber;
+	cout << "è¯·è¾“å…¥å§“åï¼š" << endl;
+	cin >> oneAddress->name;
+	SEXRE:
+	cout << "è¯·è¾“å…¥æ€§åˆ«ï¼š\n0-å¥³\n1-ç”·" << endl;
+	cin >> sex;
+	if (sex==1 || sex==0) {
+		oneAddress->sex = sex;
+	}
+	else
+	{
+		cout << "è¯·è¾“å…¥æ­£ç¡®çš„æ€§åˆ«ç¼–ç " << endl;
+		goto SEXRE;
+	}
+	cout << "è¯·è¾“å…¥å¹´é¾„ï¼š" << endl;
+	cin >> oneAddress->age;
+	cout << "è¯·è¾“å…¥è”ç³»ç”µè¯ï¼š" << endl;
+	cin >> teleponeNumber;//æ³¨æ„é•¿åº¦
 
+	cout << "è¯·è¾“å…¥ä½å€" << endl;
+	cin >> oneAddress->address;
+}
+void addContacts(UINT *addc,AddressBook oneAddress) {
+	if (*addc == LEN + 1) {
+		cout << "é€šè®¯å½•å·²æ»¡" << endl;
+		return ;
+	}
+	else
+	{
+		adds[*addc] = oneAddress;
+		names[oneAddress.name] = *addc;
+		(*addc)++;
+	}
 }
 
 void showContacts(UINT addc) {
+
 	cout << "name" << "\t"
 		<< "sex" << "\t"
 		<< "age" << "\t"
@@ -19,9 +52,9 @@ void showContacts(UINT addc) {
 		<< "address" << endl;
 	for (int i = 1;i < addc;i++) {
 		cout << adds[i].name << "\t"
-			<< adds[i].sex << "\t"
+			<< (adds[i].sex == 1 ? "ç”·" : "å¥³") << "\t"
 			<< adds[i].age << "\t"
-			<< adds[i].teleponeNumber << "\t"
+			<< adds[i].teleponeNumber << "\t\t"
 			<< adds[i].address << endl;
 	}
 }
@@ -30,10 +63,10 @@ void deleteContacts(string name,UINT *addc) {
 	UINT m = names[name];
 	cout << m << endl;
 	if (m == NULL) {
-		cout << "²éÎŞ´ËÈË" << endl;//Ğ´µÄÌ«ñîºÏÁË
+		cout << "æŸ¥æ— æ­¤äºº" << endl;//å†™çš„å¤ªè€¦åˆäº†
 	}
-	else {//ÄÑµã£¬´ÓÊı×éÖĞÉ¾È¥Ò»¸öÔªËØ,ÒòÎªÊı×éµÄÁ¬ĞøĞÔ£¬²»ÄÜÖ±½ÓÊÍ·Å¸Ã´¦¿Õ¼ä
-		//½â·¨Ò»£¬±éÀú£¬µ½Ñ°ÕÒ´¦Ê±£¬½«Ö®ºóµÄÔªËØÏòÇ°ÒÆ¶¯¸²¸Ç o(N^2),o(1)
+	else {//éš¾ç‚¹ï¼Œä»æ•°ç»„ä¸­åˆ å»ä¸€ä¸ªå…ƒç´ ,å› ä¸ºæ•°ç»„çš„è¿ç»­æ€§ï¼Œä¸èƒ½ç›´æ¥é‡Šæ”¾è¯¥å¤„ç©ºé—´
+		//è§£æ³•ä¸€ï¼Œéå†ï¼Œåˆ°å¯»æ‰¾å¤„æ—¶ï¼Œå°†ä¹‹åçš„å…ƒç´ å‘å‰ç§»åŠ¨è¦†ç›– o(N^2),o(1)
 		for (int i = m;i <= *addc;i++) {
 			if (i == *addc) {
 				adds[i] = adds[0];
@@ -44,14 +77,14 @@ void deleteContacts(string name,UINT *addc) {
 		}
 		(*addc)--;
 		names.erase(name);
-		cout << "ÒÑ¾­É¾³ı-" << name << endl;
+		cout << "å·²ç»åˆ é™¤-" << name << endl;
 	}
 }
 
 void findContacts(string name) {
 	UINT m = names[name];
 	if (m == NULL) {
-		cout << "²éÎŞ´ËÈË" << endl;
+		cout << "æŸ¥æ— æ­¤äºº" << endl;
 	}
 	else {
 		cout << adds[m].name << "\t"
@@ -62,22 +95,15 @@ void findContacts(string name) {
 	}
 }
 
-void modifyContacts(string name) {//ÔÚÓÚÈç¹ûÕë¶ÔĞÕÃû½øĞĞĞŞ¸ÄÊ±£¬Ö±½ÓĞÂ½¨Ò»¸ö£¬ÇÒÉ¾³ıÌæ»»¾ÉµÄ
+void modifyContacts(string name) {//åœ¨äºå¦‚æœé’ˆå¯¹å§“åè¿›è¡Œä¿®æ”¹æ—¶ï¼Œç›´æ¥æ–°å»ºä¸€ä¸ªï¼Œä¸”åˆ é™¤æ›¿æ¢æ—§çš„
 	UINT m = names[name];
+	AddressBook oneAddresss;
 	if (m==NULL) {
-		cout << "²éÎŞ´ËÈË" << endl;
+		cout << "æŸ¥æ— æ­¤äºº" << endl;
 	}
 	else {
-		cout << "ÇëÊäÈëĞÕÃû£º" << endl;
-		cin >> adds[m].name;
-		cout << "ÇëÊäÈëĞÔ±ğ£º\n0-Å®\n1-ÄĞ" << endl;
-		cin >> adds[m].sex;
-		cout << "ÇëÊäÈëÄêÁä£º" << endl;
-		cin >> adds[m].age;
-		cout << "ÇëÊäÈëÁªÏµµç»°£º" << endl;
-		cin >> adds[m].teleponeNumber;//×¢Òâ³¤¶È
-		cout << "ÇëÊäÈë×¡Ö·" << endl;
-		cin >> adds[m].address;
+		input(&oneAddresss);
+		addContacts(&m, oneAddresss);
 	}
 }
 
@@ -89,13 +115,82 @@ void clearContacts(UINT *addc) {
 
 void testAdd(UINT *addc) {
 	AddressBook testContacts[5] = {
-		{"ÕÅÈı",1,23,123456,"Î÷²®ÀûÑÇ"},
-		{"ÀîÊÇ",0,23,234567,"Ìì½ò"},
-		{"ÍõÎå",1,56,543777,"±±¾©³¯ÑôÇø"},
-		{"ÕÔËÄ",0,75,753159,"Î÷²ØÀ­Èø"},
-		{"ÀÏ°Ë",0,45,154678,"¿¨µÂÉ½"},
+		{"å¼ ä¸‰",1,23,123456,"è¥¿ä¼¯åˆ©äºš"},
+		{"ææ˜¯",0,23,234567,"å¤©æ´¥"},
+		{"ç‹äº”",1,56,543777,"åŒ—äº¬æœé˜³åŒº"},
+		{"èµµå››",0,75,753159,"è¥¿è—æ‹‰è¨"},
+		{"è€å…«",0,45,154678,"å¡å¾·å±±"},
 	};
 	for (auto e : testContacts) {
-		addContacts(addc, e);
+		addContacts(addc,e);
+	}
+}
+
+void show(UINT *addc) {
+	cout << "********************" << "\n"
+		<< "*** 1-æ·»åŠ è”ç³»äºº ***" << "\n"
+		<< "*** 2-æ˜¾ç¤ºè”ç³»äºº ***" << "\n"
+		<< "*** 3-åˆ é™¤è”ç³»äºº ***" << "\n"
+		<< "*** 4-æŸ¥æ‰¾è”ç³»äºº ***" << "\n"
+		<< "*** 5-ä¿®æ”¹è”ç³»äºº ***" << "\n"
+		<< "*** 6-æ¸…ç©ºè”ç³»äºº ***" << "\n"
+		<< "*** 7-é€€å‡ºé€šè®¯å½• ***" << "\n"
+		<< "********************" << endl;
+	UINT operation = 0;
+	string name;
+	AddressBook oneAddress;
+	try
+	{
+		while (1) {//å­˜åœ¨ä¸€ä¸ªé—®é¢˜ï¼Œå¼±è¾“å…¥çš„ç±»å‹å’Œè®¾å®šçš„ç±»å‹ä¸åŒï¼Œä¼šé™·å…¥æ— é™å¾ªç¯ä¸­
+			cout << "ä½ è¦è¿›è¡Œçš„æ“ä½œ:" << endl;
+			cin >> operation;
+			switch (operation) {
+			case 1:
+				input(&oneAddress);
+				addContacts(addc,oneAddress);
+				operation = 0;
+				break;
+
+			case 2:
+				showContacts(*addc);
+				break;
+			case 3:
+				cout << "è¯·è¾“å…¥è¦åˆ é™¤çš„è”ç³»äººçš„åå­—ï¼š" << endl;
+				cin >> name;
+				deleteContacts(name, addc);
+				operation = 0;
+				break;
+			case 4:
+				cout << "è¯·è¾“å…¥è¦æŸ¥æ‰¾çš„è”ç³»äººçš„åå­—ï¼š" << endl;
+				cin >> name;
+				findContacts(name);
+				operation = 0;
+				break;
+			case 5:
+				cout << "è¯·è¾“å…¥è¦ä¿®æ”¹çš„è”ç³»äººçš„åå­—ï¼š" << endl;
+				cin >> name;
+				modifyContacts(name);
+				operation = 0;
+				break;
+			case 6:
+				clearContacts(addc);
+				operation = 0;
+				break;
+			case 7:
+				return;
+				break;
+			case 8:
+				testAdd(addc);
+				break;
+			default:
+				operation = 0;
+				break;
+			}
+		}
+	}
+	catch (const std::exception&)
+	{
+		cout << "è¯·ä¸è¦è¿›è¡Œé”™è¯¯æ“ä½œ" << endl;
+		exit(0);
 	}
 }
